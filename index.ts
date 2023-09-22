@@ -183,11 +183,11 @@ const fucking_jed_ult: Command = {
         .filter((ch) => ch.isVoiceBased())
         .map((a) => a as VoiceBasedChannel);
 
-    await interaction.reply({ content: "on it boss :devil:", ephemeral: true });
+    await interaction.reply({ content: "on it boss", ephemeral: true });
 
     for (let i = 0; i < drags; ++i) {
       let channel = fool.voice.channel;
-      while (channel == fool.voice.channel)
+      while (channel === fool.voice.channel)
         channel = vcs[Math.floor(vcs.length * Math.random())];
 
       await fool.edit({ deaf: true, mute: true, channel });
@@ -258,7 +258,7 @@ client.on(Events.MessageCreate, async (message) => {
 });
 
 // ! LOGIN
-console.log("logging on");
+console.log("logging on...");
 client
   .login(process.env.TOKEN)
   .then(() => console.log("successfully logged in!"));
