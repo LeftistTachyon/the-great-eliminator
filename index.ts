@@ -10,6 +10,7 @@ import {
   SlashCommandBuilder,
   SlashCommandChannelOption,
   SlashCommandIntegerOption,
+  SlashCommandNumberOption,
   SlashCommandUserOption,
   VoiceBasedChannel,
 } from "discord.js";
@@ -205,6 +206,11 @@ const fucking_jed_ult: Command = {
     // await fool.voice.disconnect(":troll:");
     await fool.edit({ deaf: true, mute: true, channel: oldVC });
 
+    await interaction.followUp({
+      content: "bouncing complete",
+      ephemeral: true,
+    });
+
     console.log("done bouncing", fool.user.globalName);
   },
 };
@@ -228,10 +234,20 @@ const fucking_magnetize: Command = {
         .setName("vc")
         .setDescription("The voice channel to vacuum the fucker into")
         .setRequired(true)
+    )
+    .addNumberOption(
+      new SlashCommandNumberOption()
+        .setName("duration")
+        .setDescription(
+          "In minutes, how long this idiot should be ferromagnetic"
+        )
+        .setMinValue(0)
+        .setRequired(false)
     ),
   async execute(interaction) {
     const fool = interaction.options.getMember("fool") as GuildMember,
-      vc = interaction.options.getChannel("vc") as VoiceBasedChannel;
+      vc = interaction.options.getChannel("vc") as VoiceBasedChannel,
+      duration = interaction.options.getNumber("duration");
 
     // const oldVC = fool.voice.channelId;
     // if (!oldVC) {
@@ -250,6 +266,16 @@ const fucking_magnetize: Command = {
     }
     magnetMap[fool.id] = magnet;
     await magnet();
+
+    if (duration) {
+      setTimeout(async () => {
+        delete magnetMap[fool.id];
+        await interaction.followUp({
+          content: "punishment complete",
+          ephemeral: true,
+        });
+      }, duration * 60_000);
+    }
   },
 };
 
