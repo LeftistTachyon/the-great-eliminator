@@ -3,10 +3,12 @@ import {
   ChannelType,
   ChatInputCommandInteraction,
   Client,
+  ClientUser,
   Collection,
   Events,
   GatewayIntentBits,
   GuildMember,
+  MessageType,
   SlashCommandBuilder,
   SlashCommandChannelOption,
   SlashCommandIntegerOption,
@@ -39,6 +41,14 @@ const fucking_eliminate: Command = {
     ),
   async execute(interaction) {
     const fool = interaction.options.getMember("fool") as GuildMember;
+    if (fool.id === client.user?.id) {
+      await interaction.reply({
+        content: "not so fast, fucker",
+        ephemeral: true,
+      });
+      return;
+    }
+
     banished.push(fool.id);
     await interaction.reply({
       content: "aight they boutta be eliminated",
@@ -62,6 +72,14 @@ const repent: Command = {
   async execute(interaction) {
     // un-eliminate
     const fool = interaction.options.getMember("fool") as GuildMember;
+    if (fool.id === client.user?.id) {
+      await interaction.reply({
+        content: "you better, fucker",
+        ephemeral: true,
+      });
+      return;
+    }
+
     banished.splice(banished.indexOf(fool.id));
 
     // demagnetize
@@ -117,6 +135,13 @@ const fucking_carpet_bomb: Command = {
   async execute(interaction) {
     const fool = interaction.options.getMember("fool") as GuildMember,
       roles = interaction.options.getInteger("roles") ?? 10;
+    if (fool.id === client.user?.id) {
+      await interaction.reply({
+        content: "not so fast, fucker",
+        ephemeral: true,
+      });
+      return;
+    }
 
     await interaction.reply({ content: "on it boss", ephemeral: true });
 
@@ -174,6 +199,13 @@ const fucking_jed_ult: Command = {
   async execute(interaction) {
     const fool = interaction.options.getMember("fool") as GuildMember,
       drags = interaction.options.getInteger("drags") ?? 5;
+    if (fool.id === client.user?.id) {
+      await interaction.reply({
+        content: "not so fast, fucker",
+        ephemeral: true,
+      });
+      return;
+    }
 
     // console.log(fool.voice);
 
@@ -248,6 +280,13 @@ const fucking_magnetize: Command = {
     const fool = interaction.options.getMember("fool") as GuildMember,
       vc = interaction.options.getChannel("vc") as VoiceBasedChannel,
       duration = interaction.options.getNumber("duration");
+    if (fool.id === client.user?.id) {
+      await interaction.reply({
+        content: "not so fast, fucker",
+        ephemeral: true,
+      });
+      return;
+    }
 
     // const oldVC = fool.voice.channelId;
     // if (!oldVC) {
@@ -329,11 +368,25 @@ client.on(Events.InteractionCreate, async (interaction) => {
     await interaction.reply({ content: "fuck you mean", ephemeral: true });
   }
 });
+
+// ! EVENT LISTENERS
 client.on(Events.MessageCreate, async (message) => {
   // console.log("someone talked:", message.toJSON());
   if (banished.includes(message.author.id) && message.deletable) {
     await message.delete();
     console.log("ZAP there goes", message.author.globalName);
+  }
+  // console.log(message.mentions.users);
+  // console.log(client.user);
+  else if (message.mentions.has(client.user as ClientUser)) {
+    await message.reply({
+      content:
+        message.type === MessageType.Reply
+          ? "fuck off ni-"
+          : "the fuck you want",
+    });
+  } else if (message.type === MessageType.UserJoin) {
+    await message.reply({ content: "you smell" });
   }
 });
 client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
