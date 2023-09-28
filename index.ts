@@ -1,5 +1,6 @@
 import {
   CacheType,
+  ChannelType,
   ChatInputCommandInteraction,
   Client,
   Collection,
@@ -7,6 +8,7 @@ import {
   GatewayIntentBits,
   GuildMember,
   SlashCommandBuilder,
+  SlashCommandChannelOption,
   SlashCommandIntegerOption,
   SlashCommandUserOption,
   VoiceBasedChannel,
@@ -57,8 +59,13 @@ const repent: Command = {
         .setRequired(true)
     ),
   async execute(interaction) {
+    // un-eliminate
     const fool = interaction.options.getMember("fool") as GuildMember;
     banished.splice(banished.indexOf(fool.id));
+
+    // demagnetize
+    delete magnetMap[fool.id];
+
     await interaction.reply({
       content: "aight fine",
       ephemeral: true,
@@ -202,11 +209,56 @@ const fucking_jed_ult: Command = {
   },
 };
 
+const magnetMap: Record<string, () => Promise<void>> = {};
+const fucking_magnetize: Command = {
+  data: new SlashCommandBuilder()
+    .setName("fucking_magnetize")
+    .setDescription("suck up the fucker")
+    .addUserOption(
+      new SlashCommandUserOption()
+        .setName("fool")
+        .setDescription(
+          "The idiot that has too much iron in their motherfucking blood"
+        )
+        .setRequired(true)
+    )
+    .addChannelOption(
+      new SlashCommandChannelOption()
+        .addChannelTypes(ChannelType.GuildVoice)
+        .setName("vc")
+        .setDescription("The voice channel to vacuum the fucker into")
+        .setRequired(true)
+    ),
+  async execute(interaction) {
+    const fool = interaction.options.getMember("fool") as GuildMember,
+      vc = interaction.options.getChannel("vc") as VoiceBasedChannel;
+
+    // const oldVC = fool.voice.channelId;
+    // if (!oldVC) {
+    //   await interaction.reply({
+    //     content: "they ain't in a voice channel idiot",
+    //     ephemeral: true,
+    //   });
+    //   return;
+    // }
+
+    await interaction.reply({ content: "on it boss", ephemeral: true });
+
+    async function magnet() {
+      if (fool.voice.channel && fool.voice.channel !== vc)
+        await fool.edit({ channel: vc });
+    }
+    magnetMap[fool.id] = magnet;
+    await magnet();
+  },
+};
+
 export const commands: Record<string, Command> = {
   fucking_eliminate,
   repent,
   fucking_carpet_bomb,
   fucking_jed_ult,
+  fucking_magnetize,
 };
 
 // ! CLIENT STUFF
@@ -214,6 +266,8 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildVoiceStates,
     GatewayIntentBits.MessageContent,
   ],
 });
@@ -254,6 +308,14 @@ client.on(Events.MessageCreate, async (message) => {
   if (banished.includes(message.author.id) && message.deletable) {
     await message.delete();
     console.log("ZAP there goes", message.author.globalName);
+  }
+});
+client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
+  // console.log("someone updated:", newState);
+  if (magnetMap[newState.id]) {
+    // console.log("updating...", oldState.channel?.name);
+    await magnetMap[newState.id]();
+    // console.log("update complete", oldState.channel?.name);
   }
 });
 
