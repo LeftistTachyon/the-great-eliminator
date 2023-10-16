@@ -1,3 +1,4 @@
+import nhentai from "nhentai-js";
 import {
   CacheType,
   ChannelType,
@@ -372,21 +373,30 @@ client.on(Events.InteractionCreate, async (interaction) => {
 // ! EVENT LISTENERS
 client.on(Events.MessageCreate, async (message) => {
   // console.log("someone talked:", message.toJSON());
+  // elimination logic
   if (banished.includes(message.author.id) && message.deletable) {
     await message.delete();
     console.log("ZAP there goes", message.author.globalName);
+  } else if (message.type === MessageType.UserJoin) {
+    // new user logic
+    await message.reply({ content: "you smell" });
   }
   // console.log(message.mentions.users);
   // console.log(client.user);
-  else if (message.mentions.has(client.user as ClientUser)) {
-    await message.reply({
-      content:
-        message.type === MessageType.Reply
-          ? "fuck off ni-"
-          : "the fuck you want",
-    });
-  } else if (message.type === MessageType.UserJoin) {
-    await message.reply({ content: "you smell" });
+  else {
+    // reply logic
+    if (message.mentions.has(client.user as ClientUser)) {
+      await message.reply({
+        content:
+          message.type === MessageType.Reply
+            ? "fuck off ni-"
+            : "the fuck you want",
+      });
+    }
+
+    // plasmaphobia code logic
+    if (/\d{5,6}/gi.test(message.content) && (await nhentai)) {
+    }
   }
 });
 client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
