@@ -394,7 +394,7 @@ client.on(Events.MessageCreate, async (message) => {
     }
 
     // plasmaphobia code logic
-    if (/\d{6}/gi.test(message.content)) {
+    if (/^\d{6}$/gm.test(message.content)) {
       await message.reply({
         content: `https://nhentai.net/g/${message.content}`,
         allowedMentions: { repliedUser: false },
