@@ -1,4 +1,3 @@
-import nhentai from "nhentai-js";
 import {
   CacheType,
   ChannelType,
@@ -395,7 +394,7 @@ client.on(Events.MessageCreate, async (message) => {
     }
 
     // plasmaphobia code logic
-    if (/\d{5,6}/gi.test(message.content) && (await nhentai)) {
+    if (/\d{5,6}/gi.test(message.content)) {
     }
   }
 });

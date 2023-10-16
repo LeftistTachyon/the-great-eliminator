@@ -1,6 +1,6 @@
-import { exists } from "nhentai-js";
+import { exists } from "./nhentai";
 
 (async () => {
-  const test = await exists("477779");
+  const test = await exists(477779);
   console.log(test);
 })();
