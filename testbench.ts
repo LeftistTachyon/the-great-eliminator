@@ -1,6 +1,6 @@
-import { getDoujin } from "nhentai-js";
+import { exists } from "nhentai-js";
 
 (async () => {
-  const test = await getDoujin("100");
+  const test = await exists("477779");
   console.log(test);
 })();

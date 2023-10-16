@@ -1,4 +1,4 @@
-declare module "nhentai-js" {
+export module "nhentai-js" {
   export function getDoujin(identifier: string): Promise<{
     title: string;
     nativeTitle: string;
@@ -7,4 +7,5 @@ declare module "nhentai-js" {
     thumbnails: string[];
     link: string;
   }>;
+  export function exists(identifier: string): Promise<boolean>;
 }
