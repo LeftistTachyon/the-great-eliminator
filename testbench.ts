@@ -1,6 +1,5 @@
-import { exists } from "./nhentai";
-
 (async () => {
-  const test = await exists(477779);
-  console.log(test);
+  const test = await fetch("https://nhentai.net/api/gallery/100");
+  // console.log(await test.json());
+  console.log(await test.text());
 })();
