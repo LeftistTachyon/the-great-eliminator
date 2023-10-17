@@ -382,24 +382,14 @@ client.on(Events.MessageCreate, async (message) => {
   }
   // console.log(message.mentions.users);
   // console.log(client.user);
-  else {
-    // reply logic
-    if (message.mentions.has(client.user as ClientUser)) {
-      await message.reply({
-        content:
-          message.type === MessageType.Reply
-            ? "fuck off ni-"
-            : "the fuck you want",
-      });
-    }
-
-    // plasmaphobia code logic
-    if (/^\d{6}$/gm.test(message.content)) {
-      await message.reply({
-        content: `https://nhentai.net/g/${message.content}`,
-        allowedMentions: { repliedUser: false },
-      });
-    }
+  // reply logic
+  else if (message.mentions.has(client.user as ClientUser)) {
+    await message.reply({
+      content:
+        message.type === MessageType.Reply
+          ? "fuck off ni-"
+          : "the fuck you want",
+    });
   }
 });
 client.on(Events.VoiceStateUpdate, async (oldState, newState) => {
